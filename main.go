@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	//"github.com/jdantonio/ocr-go/lcd"
-	//"bytes"
 	"errors"
 	"fmt"
 	"os"

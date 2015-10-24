@@ -47,7 +47,6 @@ func TestLcdToInt(t *testing.T) {
 
 	expected := 1357924680
 	actual, _ := LcdToInt(number)
-
 	if actual != expected {
 		t.Errorf("expected %v but got %v", expected, actual)
 	}
@@ -59,6 +58,59 @@ func TestLcdToInt(t *testing.T) {
 	}
 
 	actual, err := LcdToInt(invalid)
+	if err == nil {
+		t.Errorf("expected an error but got %v", actual)
+	}
+}
+
+func TestDisplayToInt(t *testing.T) {
+	number := []string{
+		"   ",
+		"  |",
+		"  |",
+	}
+	expected := 1
+	actual, _ := DisplayToInt(number)
+	if actual != expected {
+		t.Errorf("expected %v but got %v", expected, actual)
+	}
+
+	number = []string{
+		"    _  _     _  _  _  _  _  _ ",
+		"  | _| _||_||_ |_   ||_||_|| |",
+		"  ||_  _|  | _||_|  ||_|__||_|",
+	}
+	expected = 1234567890
+	actual, _ = DisplayToInt(number)
+	if actual != expected {
+		t.Errorf("expected %v but got %v", expected, actual)
+	}
+
+	invalid := []string{
+		"       _     _  _  _  _  _  _ ",
+		"  |  | _||_||_ |_   ||_||_|| |",
+		"  ||   _|  | _||_|  ||_| _||_|",
+	}
+	actual, err := DisplayToInt(invalid)
+	if err == nil {
+		t.Errorf("expected an error but got %v", actual)
+	}
+
+	invalid = []string{
+		"    _  _     _  _  _  _  _  _ ",
+		"  | _| _||_||_ |_   ||_||_|| |",
+	}
+	actual, err = DisplayToInt(invalid)
+	if err == nil {
+		t.Errorf("expected an error but got %v", actual)
+	}
+
+	invalid = []string{
+		"    _  _     _  _  _  _  _ ",
+		"  | _| _||_||_ |_   ||_||_|| |",
+		"  ||_  _|  | _||_|  ||_|__|",
+	}
+	actual, err = DisplayToInt(invalid)
 	if err == nil {
 		t.Errorf("expected an error but got %v", actual)
 	}

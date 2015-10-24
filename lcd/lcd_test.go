@@ -31,7 +31,7 @@ func TestLcdToDigitWithBadValues(t *testing.T) {
 	}
 }
 
-func TestLcdToInt(t *testing.T) {
+func TestLcdToNumber(t *testing.T) {
 	number := []string{
 		LCD[1],
 		LCD[3],
@@ -46,7 +46,7 @@ func TestLcdToInt(t *testing.T) {
 	}
 
 	expected := 1357924680
-	actual, _ := LcdToInt(number)
+	actual, _ := LcdToNumber(number)
 	if actual != expected {
 		t.Errorf("expected %v but got %v", expected, actual)
 	}
@@ -57,7 +57,7 @@ func TestLcdToInt(t *testing.T) {
 		LCD[2], // good
 	}
 
-	actual, err := LcdToInt(invalid)
+	actual, err := LcdToNumber(invalid)
 	if err == nil {
 		t.Errorf("expected an error but got %v", actual)
 	}

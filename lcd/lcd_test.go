@@ -1,10 +1,10 @@
-package main
+package lcd
 
 import "testing"
 
-func TestLcdToDigitWithGoodValues(t *testing.T) {
+func TestLcdToIntWithGoodValues(t *testing.T) {
 	for expected, lcd := range LCD {
-		actual, err := LcdToDigit(lcd)
+		actual, err := LcdToInt(lcd)
 		if err != nil {
 			t.Errorf("%v should be valid but returned error %v", actual, err)
 		}
@@ -14,7 +14,7 @@ func TestLcdToDigitWithGoodValues(t *testing.T) {
 	}
 }
 
-func TestLcdToDigitWithBadValues(t *testing.T) {
+func TestLcdToIntWithBadValues(t *testing.T) {
 	invalids := []string{
 		"",              // empty string
 		"/-/-/-/-/",     // invalid characters
@@ -24,7 +24,7 @@ func TestLcdToDigitWithBadValues(t *testing.T) {
 	}
 
 	for _, lcd := range invalids {
-		actual, err := LcdToDigit(lcd)
+		actual, err := LcdToInt(lcd)
 		if err == nil {
 			t.Errorf("%v should be invalid but no error was returned", actual)
 		}

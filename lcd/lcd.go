@@ -35,7 +35,7 @@ var LCD = []string{
 	" _ |_|__|", // 9
 }
 
-func LcdToInt(str string) (int, error) {
+func LcdToDigit(str string) (int, error) {
 	const invalid = -1
 
 	if len(str) < LcdDigitLength {
@@ -51,4 +51,23 @@ func LcdToInt(str string) (int, error) {
 	}
 
 	return invalid, errors.New("invalid characters")
+}
+
+func LcdToInt(slice []string) (int, error) {
+	const invalid = -1
+
+	value := 0
+	multiplier := 1
+
+	for i := len(slice) - 1; i >= 0; i-- {
+		digit, err := LcdToDigit(slice[i])
+		if err != nil {
+			return invalid, err
+		} else {
+			value += digit * multiplier
+			multiplier *= 10
+		}
+	}
+
+	return value, nil
 }

@@ -9,7 +9,8 @@ import (
 	"os"
 )
 
-const AccountNumberLength = 30 // for the test file; the real file will have 27
+// for the test file; the real file will have 27
+const AccountNumberLength = 30
 
 func check(e error) {
 	if e != nil {
@@ -28,8 +29,7 @@ func main() {
 
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		lines += 1
-		//fmt.Println(scanner.Text())
+		lines++
 		buffer := scanner.Text()
 
 		length := len(buffer)

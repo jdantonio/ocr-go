@@ -98,11 +98,14 @@ import (
 //  [' ', '_', ' ', '|', '_', ' ', '|', '_', '|'], # 6
 //  [' ', '_', ' ', ' ', ' ', '|', ' ', ' ', '|'], # 7
 //  [' ', '_', ' ', '|', '_', '|', '|', '_', '|'], # 8
-//  [' ', '_', ' ', '|', '_', '|', ' ', '_', '|'], # 9
+//  [' ', '_', ' ', '|', '_', ' ', '|', '_', '|'], # 9
 //]
 
 // Number of characters necessary to describe a single digit on an LCD display.
 const DigitLength = 9
+
+// Return value for integer conversion when an error is raised.
+const Invalid = -1
 
 // A single LCD digit.
 type Digit string
@@ -121,6 +124,11 @@ type Integral interface {
 	Integer() (int, error)
 }
 
+type DisplayScanner interface {
+	Scan() bool
+	Text() string
+}
+
 // String representations of all digits, 0-9, as read from an LCD display.
 var AllDigits = []Digit{
 	" _ | ||_|", // 0
@@ -132,54 +140,24 @@ var AllDigits = []Digit{
 	" _ |_ |_|", // 6
 	" _   |  |", // 7
 	" _ |_||_|", // 8
-	" _ |_|__|", // 9
+	" _ |_| _|", // 9
 }
 
-// Integer converts a string of characters which represents a single LCD digit
-// into the corresponding integer value. Each character in the string
-// represents a single element in the LCD grid described in "LCD Digit Layout"
-// above. The index of each character within the string corresponds to the grid
-// position in the 0-8 format. Thus, the input string must be exactly nine
-// characters.
-func (digit Digit) Integer() (int, error) {
-	const invalid = -1
+func NewDisplay() Display {
+	return make([]string, 3)
+}
 
-	if len(digit) < DigitLength {
-		return invalid, errors.New("too short")
-	} else if len(digit) > DigitLength {
-		return invalid, errors.New("too long")
-	}
+func ScanNext(scanner DisplayScanner) (int, error) {
+	buffer := NewDisplay()
 
-	for integer, str := range AllDigits {
-		if digit == str {
-			return integer, nil
+	for i := 0; i < 3; i++ {
+		buffer[i] = scanner.Text()
+		if !scanner.Scan() {
+			return Invalid, errors.New("insufficient lines")
 		}
 	}
 
-	return invalid, errors.New("invalid characters")
-}
-
-// Integer converts a series of LCD digits into the integer value represented
-// by those digits. The input is an array of strings where each string
-// represents a single digit. The format of each string in the array is
-// described in the Digit.Integer function.
-func (number Number) Integer() (int, error) {
-	const invalid = -1
-
-	value := 0
-	multiplier := 1
-
-	for i := len(number) - 1; i >= 0; i-- {
-		integer, err := Digit(number[i]).Integer()
-		if err != nil {
-			return invalid, err
-		} else {
-			value += integer * multiplier
-			multiplier *= 10
-		}
-	}
-
-	return value, nil
+	return buffer.Integer()
 }
 
 // Integer converts a series of LCD digits in display order into the
@@ -191,15 +169,56 @@ func (number Number) Integer() (int, error) {
 // the input array must be the same length as the other two as each represents
 // different portions of the same digits.
 func (display Display) Integer() (int, error) {
-	const invalid = -1
-
 	if !display.isValid() {
-		return invalid, errors.New("invalid LCD display")
+		return Invalid, errors.New("invalid LCD display")
 	}
 
 	number := display.toDigits()
 
 	return number.Integer()
+}
+
+// Integer converts a series of LCD digits into the integer value represented
+// by those digits. The input is an array of strings where each string
+// represents a single digit. The format of each string in the array is
+// described in the Digit.Integer function.
+func (number Number) Integer() (int, error) {
+	value := 0
+	multiplier := 1
+
+	for i := len(number) - 1; i >= 0; i-- {
+		integer, err := Digit(number[i]).Integer()
+		if err != nil {
+			return Invalid, err
+		} else {
+			value += integer * multiplier
+			multiplier *= 10
+		}
+	}
+
+	return value, nil
+}
+
+// Integer converts a string of characters which represents a single LCD digit
+// into the corresponding integer value. Each character in the string
+// represents a single element in the LCD grid described in "LCD Digit Layout"
+// above. The index of each character within the string corresponds to the grid
+// position in the 0-8 format. Thus, the input string must be exactly nine
+// characters.
+func (digit Digit) Integer() (int, error) {
+	if len(digit) < DigitLength {
+		return Invalid, errors.New("too short")
+	} else if len(digit) > DigitLength {
+		return Invalid, errors.New("too long")
+	}
+
+	for integer, str := range AllDigits {
+		if digit == str {
+			return integer, nil
+		}
+	}
+
+	return Invalid, errors.New("invalid characters")
 }
 
 // isValid checks a multi-digit LCD array, as described in Display.Integer, for

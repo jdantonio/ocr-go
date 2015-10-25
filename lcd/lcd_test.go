@@ -78,7 +78,7 @@ func TestDisplayInteger(t *testing.T) {
 	number = Display{
 		"    _  _     _  _  _  _  _  _ ",
 		"  | _| _||_||_ |_   ||_||_|| |",
-		"  ||_  _|  | _||_|  ||_|__||_|",
+		"  ||_  _|  | _||_|  ||_| _||_|",
 	}
 	expected = 1234567890
 	actual, _ = number.Integer()

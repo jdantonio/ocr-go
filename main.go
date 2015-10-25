@@ -23,9 +23,9 @@ package main
 
 import (
 	"bufio"
-	//"github.com/jdantonio/ocr-go/lcd"
-	"errors"
+	//"errors"
 	"fmt"
+	"github.com/jdantonio/ocr-go/lcd"
 	"os"
 )
 
@@ -41,27 +41,17 @@ func check(e error) {
 
 func main() {
 
-	lines := 0
+	//lines := 0
 
 	file, err := os.Open("data.txt")
 	check(err)
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
+
 	for scanner.Scan() {
-		lines++
-		buffer := scanner.Text()
-
-		length := len(buffer)
-		if length != AccountNumberLength && length != 0 {
-			check(errors.New("main: incorrect LCD string length"))
-		}
-
-		fmt.Println(buffer)
+		value, err := lcd.ScanNext(scanner)
+		check(err)
+		fmt.Println(value)
 	}
-
-	if lines%4 != 0 {
-		fmt.Println("Boom!")
-	}
-	check(scanner.Err())
 }

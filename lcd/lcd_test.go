@@ -53,8 +53,8 @@ func TestScanNextWithInvalidInput(t *testing.T) {
 }
 
 func TestDigitToIntegerWithGoodValues(t *testing.T) {
-	for expected, digit := range AllDigits {
-		actual, err := digit.Integer()
+	for expected, digit := range allDigits {
+		actual, err := digit.integer()
 		if err != nil {
 			t.Errorf("%v should be valid but returned error %v", actual, err)
 		}
@@ -65,8 +65,8 @@ func TestDigitToIntegerWithGoodValues(t *testing.T) {
 }
 
 func TestDigitToIntegerWithBadValues(t *testing.T) {
-	invalids := []Digit{
-		"",              // empty Digit
+	invalids := []digit{
+		"",              // empty digit
 		"/-/-/-/-/",     // invalid characters
 		" _ ",           // too short
 		" _ | ||_|    ", // too long
@@ -74,7 +74,7 @@ func TestDigitToIntegerWithBadValues(t *testing.T) {
 	}
 
 	for _, digit := range invalids {
-		actual, err := digit.Integer()
+		actual, err := digit.integer()
 		if err == nil {
 			t.Errorf("%v should be invalid but no error was returned", actual)
 		}
@@ -83,84 +83,84 @@ func TestDigitToIntegerWithBadValues(t *testing.T) {
 
 func TestNumberToInteger(t *testing.T) {
 	number := Number{
-		AllDigits[1],
-		AllDigits[3],
-		AllDigits[5],
-		AllDigits[7],
-		AllDigits[9],
-		AllDigits[2],
-		AllDigits[4],
-		AllDigits[6],
-		AllDigits[8],
-		AllDigits[0],
+		allDigits[1],
+		allDigits[3],
+		allDigits[5],
+		allDigits[7],
+		allDigits[9],
+		allDigits[2],
+		allDigits[4],
+		allDigits[6],
+		allDigits[8],
+		allDigits[0],
 	}
 
 	expected := 1357924680
-	actual, _ := number.Integer()
+	actual, _ := number.integer()
 	if actual != expected {
 		t.Errorf("expected %v but got %v", expected, actual)
 	}
 
 	invalid := Number{
-		AllDigits[1], // good
+		allDigits[1], // good
 		"____",       // bad
-		AllDigits[2], // good
+		allDigits[2], // good
 	}
 
-	actual, err := invalid.Integer()
+	actual, err := invalid.integer()
 	if err == nil {
 		t.Errorf("expected an error but got %v", actual)
 	}
 }
 
 func TestDisplayToInteger(t *testing.T) {
-	display := Display{
+	dsply := display{
 		"   ",
 		"  |",
 		"  |",
 	}
 	expected := 1
-	actual, _ := display.Integer()
+	actual, _ := dsply.integer()
 	if actual != expected {
 		t.Errorf("expected %v but got %v", expected, actual)
 	}
 
-	display = Display{
+	dsply = display{
 		"    _  _     _  _  _  _  _  _ ",
 		"  | _| _||_||_ |_   ||_||_|| |",
 		"  ||_  _|  | _||_|  ||_| _||_|",
 	}
 	expected = 1234567890
-	actual, _ = display.Integer()
+	actual, _ = dsply.integer()
 	if actual != expected {
 		t.Errorf("expected %v but got %v", expected, actual)
 	}
 
-	invalid := Display{
+	invalid := display{
 		"       _     _  _  _  _  _  _ ",
 		"  |  | _||_||_ |_   ||_||_|| |",
 		"  ||   _|  | _||_|  ||_| _||_|",
 	}
-	actual, err := invalid.Integer()
+	actual, err := invalid.integer()
 	if err == nil {
 		t.Errorf("expected an error but got %v", actual)
 	}
 
-	invalid = Display{
+	invalid = display{
 		"    _  _     _  _  _  _  _  _ ",
 		"  | _| _||_||_ |_   ||_||_|| |",
 	}
-	actual, err = invalid.Integer()
+	actual, err = invalid.integer()
 	if err == nil {
 		t.Errorf("expected an error but got %v", actual)
 	}
 
-	invalid = Display{
+	invalid = display{
 		"    _  _     _  _  _  _  _ ",
 		"  | _| _||_||_ |_   ||_||_|| |",
 		"  ||_  _|  | _||_|  ||_|__|",
 	}
-	actual, err = invalid.Integer()
+	actual, err = invalid.integer()
 	if err == nil {
 		t.Errorf("expected an error but got %v", actual)
 	}

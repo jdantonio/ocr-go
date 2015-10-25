@@ -23,14 +23,10 @@ package main
 
 import (
 	"bufio"
-	//"errors"
 	"fmt"
 	"github.com/jdantonio/ocr-go/lcd"
 	"os"
 )
-
-// for the test file; the real file will have 27
-const AccountNumberLength = 30
 
 func check(e error) {
 	if e != nil {
@@ -40,8 +36,6 @@ func check(e error) {
 }
 
 func main() {
-
-	//lines := 0
 
 	file, err := os.Open("data.txt")
 	check(err)

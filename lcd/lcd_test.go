@@ -2,7 +2,7 @@ package lcd
 
 import "testing"
 
-func TestLcdToDigitWithGoodValues(t *testing.T) {
+func TestDigitToIntegerWithGoodValues(t *testing.T) {
 	for expected, digit := range AllDigits {
 		actual, err := digit.Integer()
 		if err != nil {
@@ -14,7 +14,7 @@ func TestLcdToDigitWithGoodValues(t *testing.T) {
 	}
 }
 
-func TestLcdToDigitWithBadValues(t *testing.T) {
+func TestDigitToIntegerWithBadValues(t *testing.T) {
 	invalids := []Digit{
 		"",              // empty Digit
 		"/-/-/-/-/",     // invalid characters
@@ -31,7 +31,7 @@ func TestLcdToDigitWithBadValues(t *testing.T) {
 	}
 }
 
-func TestLcdToNumber(t *testing.T) {
+func TestNumberToInteger(t *testing.T) {
 	number := Number{
 		AllDigits[1],
 		AllDigits[3],
@@ -63,25 +63,25 @@ func TestLcdToNumber(t *testing.T) {
 	}
 }
 
-func TestDisplayInteger(t *testing.T) {
-	number := Display{
+func TestDisplayToInteger(t *testing.T) {
+	display := Display{
 		"   ",
 		"  |",
 		"  |",
 	}
 	expected := 1
-	actual, _ := number.Integer()
+	actual, _ := display.Integer()
 	if actual != expected {
 		t.Errorf("expected %v but got %v", expected, actual)
 	}
 
-	number = Display{
+	display = Display{
 		"    _  _     _  _  _  _  _  _ ",
 		"  | _| _||_||_ |_   ||_||_|| |",
 		"  ||_  _|  | _||_|  ||_| _||_|",
 	}
 	expected = 1234567890
-	actual, _ = number.Integer()
+	actual, _ = display.Integer()
 	if actual != expected {
 		t.Errorf("expected %v but got %v", expected, actual)
 	}

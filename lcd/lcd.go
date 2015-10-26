@@ -239,7 +239,7 @@ func (dsply display) toDigits() Number {
 
 	// stringify
 	number := make(Number, digits)
-	for i := 0; i < digits; i++ {
+	for i, _ := range buffer {
 		number[i] = digit(buffer[i].String())
 	}
 

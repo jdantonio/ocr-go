@@ -1,25 +1,6 @@
-package account
+package acctnum
 
 import "testing"
-
-func TestAcctNumToDigits(t *testing.T) {
-	acctnum := 345882865
-	expected := digits{3, 4, 5, 8, 8, 2, 8, 6, 5}
-	actual := acctnumToDigits(acctnum)
-
-	ok := true
-
-	for i := 0; i < acctnumLength; i++ {
-		if actual[i] != expected[i] {
-			ok = false
-			break
-		}
-	}
-
-	if !ok {
-		t.Error()
-	}
-}
 
 func TestChecksum(t *testing.T) {
 	good := 345882865
@@ -34,6 +15,8 @@ func TestIsValid(t *testing.T) {
 	bad := 111111111
 	short := 34588286
 	long := 3458828650
+	high := maximum + 10
+	low := minimum - 10
 
 	if !IsValid(good) {
 		t.Errorf("expected %v to be valid", good)
@@ -49,5 +32,13 @@ func TestIsValid(t *testing.T) {
 
 	if IsValid(long) {
 		t.Errorf("expected %v to not be valid", long)
+	}
+
+	if IsValid(high) {
+		t.Errorf("expected %v to not be valid", high)
+	}
+
+	if IsValid(low) {
+		t.Errorf("expected %v to not be valid", low)
 	}
 }

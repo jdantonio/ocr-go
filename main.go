@@ -24,6 +24,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"github.com/jdantonio/ocr-go/account"
 	"github.com/jdantonio/ocr-go/lcd"
 	"os"
 )
@@ -44,8 +45,12 @@ func main() {
 	scanner := bufio.NewScanner(file)
 
 	for scanner.Scan() {
-		value, err := lcd.ScanNext(scanner)
+		acctnum, err := lcd.ScanNext(scanner)
 		check(err)
-		fmt.Println(value)
+		if account.IsValid(acctnum) {
+			fmt.Println(acctnum)
+		} else {
+			fmt.Printf("INVALID (%v)\n", acctnum)
+		}
 	}
 }

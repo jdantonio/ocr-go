@@ -119,6 +119,44 @@ func TestNumberToInteger(t *testing.T) {
 	}
 }
 
+func TestAlternates(t *testing.T) {
+	given := 1234567890
+	expected := []int{
+		7234567890,
+		1934567890,
+		1294567890,
+		1234667890,
+		1234967890,
+		1234557890,
+		1234587890,
+		1234561890,
+		1234567090,
+		1234567690,
+		1234567990,
+		1234567820,
+		1234567830,
+		1234567850,
+		1234567880,
+		1234567898,
+	}
+
+	actual := Alternates(given)
+
+	for _, exp := range expected {
+		ok := false
+		for _, alt := range actual {
+			if exp == alt {
+				ok = true
+				break
+			}
+		}
+		if !ok {
+			t.Errorf("expected %v but was not found in list of alternates", exp)
+			break
+		}
+	}
+}
+
 func TestDisplayToInteger(t *testing.T) {
 	dsply := display{
 		"   ",

@@ -175,6 +175,19 @@ var allDigits = []digit{
 		" _|",
 }
 
+var alternateDigits = [][]int{
+	{8},          // 0
+	{7},          // 1
+	{9},          // 2
+	{9},          // 3
+	{},           // 4
+	{6, 9},       // 5
+	{5, 8},       // 6
+	{1},          // 7
+	{0, 6, 9},    // 8
+	{2, 3, 5, 8}, // 9
+}
+
 func newDisplay() display {
 	return make([]string, 3)
 }
@@ -190,6 +203,12 @@ func ScanNext(scanner DisplayScanner) (int, error) {
 	}
 
 	return buffer.integer()
+}
+
+func Alternates(number int) []int {
+	var alternates []int
+
+	return alternates
 }
 
 // integer converts a series of LCD digits in display order into the

@@ -104,12 +104,18 @@ func TestNumberToInteger(t *testing.T) {
 	invalid := Number{
 		allDigits[1], // good
 		"____",       // bad
+		"____",       // bad
 		allDigits[2], // good
+		allDigits[3], // good
 	}
+	expected_error := "1??23"
 
 	actual, err := invalid.integer()
 	if err == nil {
 		t.Errorf("expected an error but got %v", actual)
+	}
+	if err.Error() != expected_error {
+		t.Errorf("expected error to be %v but got %v", expected_error, err.Error())
 	}
 }
 

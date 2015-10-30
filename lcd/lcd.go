@@ -82,6 +82,7 @@ package lcd
 import (
 	"bytes"
 	"errors"
+	"strconv"
 )
 
 //allDigits = [
@@ -216,18 +217,26 @@ func (dsply display) integer() (int, error) {
 func (number Number) integer() (int, error) {
 	value := 0
 	multiplier := 1
+	var result bytes.Buffer
+	ok := true
 
 	for i := len(number) - 1; i >= 0; i-- {
 		integer, err := digit(number[i]).integer()
 		if err != nil {
-			return Invalid, err
+			ok = false
+			result.WriteString("?")
 		} else {
 			value += integer * multiplier
 			multiplier *= 10
+			result.WriteString(strconv.Itoa(integer))
 		}
 	}
 
-	return value, nil
+	if ok {
+		return value, nil
+	} else {
+		return Invalid, errors.New(reverse(result.String()))
+	}
 }
 
 // integer converts a string of characters which represents a single LCD digit
@@ -283,4 +292,13 @@ func (dsply display) toDigits() Number {
 	}
 
 	return number
+}
+
+// http://stackoverflow.com/questions/1752414/how-to-reverse-a-string-in-go
+func reverse(s string) string {
+	runes := []rune(s)
+	for i, j := 0, len(runes)-1; i < j; i, j = i+1, j-1 {
+		runes[i], runes[j] = runes[j], runes[i]
+	}
+	return string(runes)
 }

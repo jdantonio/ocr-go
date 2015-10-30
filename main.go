@@ -23,10 +23,13 @@ package main
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
+	"io"
+	"os"
+
 	"github.com/jdantonio/ocr-go/acctnum"
 	"github.com/jdantonio/ocr-go/lcd"
-	"os"
 )
 
 func check(e error) {
@@ -36,21 +39,44 @@ func check(e error) {
 	}
 }
 
-func main() {
-
-	file, err := os.Open("data.txt")
-	check(err)
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
+func scan(scanner lcd.DisplayScanner, writer io.Writer) {
+	var output string
 
 	for scanner.Scan() {
 		account, err := lcd.ScanNext(scanner)
-		check(err)
-		if acctnum.IsValid(account) {
-			fmt.Println(account)
+		if err != nil {
+			output = fmt.Sprintf("%09s ILL", err.Error())
+		} else if acctnum.IsValid(account) {
+			output = fmt.Sprintf("%09d", account)
 		} else {
-			fmt.Printf("INVALID (%v)\n", account)
+			output = fmt.Sprintf("%09d ERR", account)
 		}
+		writer.Write([]byte(output))
+		writer.Write([]byte("\n"))
 	}
+}
+
+func main() {
+
+	infile, err := os.Open("data.txt")
+	check(err)
+	defer infile.Close()
+
+	var outfilename string
+	flag.StringVar(&outfilename, "outfile", "", "name of the output file")
+	flag.Parse()
+
+	var writer io.Writer
+
+	if outfilename == "" {
+		writer = os.Stdout
+	} else {
+		outfile, err := os.Create(outfilename)
+		check(err)
+		defer outfile.Close()
+		writer = outfile
+	}
+
+	scanner := bufio.NewScanner(infile)
+	scan(scanner, writer)
 }
